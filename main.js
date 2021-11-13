@@ -51,11 +51,9 @@ const schedule = scheduler.scheduleJob("*/5 * * * * *", function () {
 
       function callback(error, response, body) {
         if (!error && response.statusCode == 200) {
-          console.log(body);
+          console.log("메시지 전송 완료.");
         } else {
           console.log(error);
-          console.log("===");
-          console.log(body);
         }
       }
 
@@ -82,11 +80,9 @@ const schedule = scheduler.scheduleJob("*/5 * * * * *", function () {
 
       function callback(error, response, body) {
         if (!error && response.statusCode == 200) {
-          console.log(body);
+          console.log("메시지 전송 완료.");
         } else {
           console.log(error);
-          console.log("===");
-          console.log(body);
         }
       }
 
