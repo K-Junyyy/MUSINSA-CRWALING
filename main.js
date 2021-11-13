@@ -51,7 +51,7 @@ const schedule = scheduler.scheduleJob("*/5 * * * * *", function () {
 
       function callback(error, response, body) {
         if (!error && response.statusCode == 200) {
-          console.log("메시지 전송 완료.");
+          console.log("[XL 사이즈 품목이 재입고] 메시지 전송 완료.");
         } else {
           console.log(error);
         }
@@ -80,7 +80,7 @@ const schedule = scheduler.scheduleJob("*/5 * * * * *", function () {
 
       function callback(error, response, body) {
         if (!error && response.statusCode == 200) {
-          console.log("메시지 전송 완료.");
+          console.log("[XL 사이즈 품절] 메시지 전송 완료.");
         } else {
           console.log(error);
         }
