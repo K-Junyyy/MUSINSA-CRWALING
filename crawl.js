@@ -1,31 +1,39 @@
 const scheduler = require("node-schedule");
-var cheerio = require("cheerio");
-var request = require("request");
+const cheerio = require("cheerio");
+const request = require("request");
+const kakaoTalk = require("./kakaoTalk.js");
 
-// API url
-var url = "https://store.musinsa.com/app/goods/836816";
+function restock(itemNum, size) {
+  const schedule = scheduler.scheduleJob("*/2 * * * * *", function () {
+    let url = "https://store.musinsa.com/app/goods/" + itemNum;
+    request(url, function (error, response, html) {
+      if (error) {
+        throw error;
+      }
+      const $ = cheerio.load(html);
+      const productTitle = $(".product_title em").text();
+      const option = $(".option1 option");
+      let map = new Map();
+      console.log(productTitle);
+      for (let i = 1; i < option.length; i++) {
+        // console.log(option[i].attribs.value + " " + option[i].attribs.jaego_yn);
+        map.set(option[i].attribs.value, option[i].attribs.jaego_yn);
+      }
 
-const schedule = scheduler.scheduleJob("*/2 * * * * *", function () {
-  request(url, function (error, response, html) {
-    if (error) {
-      throw error;
-    }
+      console.log("사이즈: " + size);
+      console.log("재고: " + map.get(size));
 
-    var $ = cheerio.load(html);
-
-    var S = $(".option1 option")[1];
-    var M = $(".option1 option")[2];
-    var L = $(".option1 option")[3];
-    var XL = $(".option1 option")[4];
-
-    console.log("====");
-    console.log(S.attribs.value + " " + S.attribs.jaego_yn);
-    console.log(M.attribs.value + " " + M.attribs.jaego_yn);
-    console.log(L.attribs.value + " " + L.attribs.jaego_yn);
-    console.log(XL.attribs.value + " " + XL.attribs.jaego_yn);
-
-    if (XL.attribs.jaego_yn == "Y") {
-      schedule.cancel();
-    }
+      if (map.get(size) === "Y") {
+        const msg = productTitle + " " + size + " 재고있음";
+        console.log(msg);
+        kakaoTalk.sendMessage(msg);
+        schedule.cancel();
+      } else {
+      }
+    });
   });
-});
+}
+
+module.exports = {
+  restock: restock,
+};
