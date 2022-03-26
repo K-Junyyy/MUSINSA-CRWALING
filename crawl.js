@@ -28,7 +28,6 @@ function restock(itemNum, size) {
         console.log(msg);
         kakaoTalk.sendMessage(msg);
         schedule.cancel();
-      } else {
       }
     });
   });
